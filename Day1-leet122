@@ -1,1 +1,78 @@
 https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/
+//starting from rec to memorization then to tabulation then space optimization
+class Solution {
+public:
+    int maxp(vector<int>& s,int buy,int index){
+        if(index>=s.size()) return 0;
+        int trade=0,notrade=0;
+        if(buy==0){
+            notrade=maxp(s,0,index+1);
+            trade=maxp(s,1,index+1)-s[index];
+        }
+        else{
+            notrade=maxp(s,1,index+1);
+            trade=s[index]+maxp(s,0,index+1);
+        }
+        return max(trade,notrade);
+    }
+    int memo(vector<int>& s,int buy,int index,vector<vector<int>>& dp){
+        if(index>=s.size()) return 0;
+        if(dp[buy][index]!=-1) return dp[buy][index];
+        int trade=0,notrade=0;
+        if(buy==0){
+            notrade=memo(s,0,index+1,dp);
+            trade=memo(s,1,index+1,dp)-s[index];
+        }
+        else{
+            notrade=memo(s,1,index+1,dp);
+            trade=s[index]+memo(s,0,index+1,dp);
+        }
+        return dp[buy][index]=max(trade,notrade);
+    }
+    int tab(vector<int> &s){
+        vector<vector<int>> dp(s.size()+1,vector<int>(2,0));
+        for(int index=s.size()-1;index>=0;index--){
+            for(int buy=1;buy>=0;buy--){
+                int trade=0,notrade=0;
+                if(buy==0){
+                    notrade=dp[index+1][0];
+                    trade=dp[index+1][1]-s[index];
+                }
+                else{
+                    notrade=dp[index+1][1];
+                    trade=s[index]+dp[index+1][0];
+                }
+                dp[index][buy]=max(trade,notrade);
+            }
+        }
+        return dp[0][0];
+    }
+    int spaceopt(vector<int> &s){
+        vector<int> curr(2,0);
+        vector<int> next(2,0);
+        for(int index=s.size()-1;index>=0;index--){
+            for(int buy=1;buy>=0;buy--){
+                int trade=0,notrade=0;
+                if(buy==0){
+                    notrade=next[0];
+                    trade=next[1]-s[index];
+                }
+                else{
+                    notrade=next[1];
+                    trade=s[index]+next[0];
+                }
+                curr[buy]=max(trade,notrade);
+            }
+            next=curr;
+        }
+        return curr[0];
+    }
+    int maxProfit(vector<int>& prices) {
+        int buy=0;
+        return spaceopt(prices);
+        //return tab(prices);
+        /* vector<vector<int>> dp(2,vector<int>(prices.size()+1,-1));
+        return memo(prices,buy,0,dp); */
+        //return maxp(prices,buy,0);
+    }
+};
