@@ -1,0 +1,82 @@
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/submissions/1181885690/
+//Buy and sell stock-iii
+//code from recursion to space optimization
+class Solution {
+public:
+    int rec(vector<int>& s,int buy,int index,int limit){
+        if(index>=s.size() || limit<=0) return 0;
+        int trade=0,notrade=0;
+        if(buy==0){
+            notrade=rec(s,0,index+1,limit);
+            trade=rec(s,1,index+1,limit)-s[index];
+        }
+        else{
+            notrade=rec(s,1,index+1,limit);
+            trade=s[index]+rec(s,0,index+1,limit-1);
+        }
+        return max(trade,notrade);
+    }
+    int memo(vector<int>& s,int buy,int index,int limit,vector<vector<vector<int>>>& dp){
+        if(index>=s.size() || limit<=0) return 0;
+        if(dp[index][buy][limit]!=-1) return dp[index][buy][limit];
+        int trade=0,notrade=0;
+        if(buy==0){
+            notrade=memo(s,0,index+1,limit,dp);
+            trade=memo(s,1,index+1,limit,dp)-s[index];
+        }
+        else{
+            notrade=memo(s,1,index+1,limit,dp);
+            trade=s[index]+memo(s,0,index+1,limit-1,dp);
+        }
+        return dp[index][buy][limit]=max(trade,notrade);
+    }
+    int tab(vector<int> &s){
+        vector<vector<vector<int>>> dp(s.size()+1,vector<vector<int>>(2,vector<int>(4,0)));
+        for(int index=s.size()-1;index>=0;index--){
+            for(int buy=1;buy>=0;buy--){
+                for(int limit=1;limit<3;limit++){
+                    int trade=0,notrade=0;
+                    if(buy==0){
+                        notrade=dp[index+1][0][limit];
+                        trade=dp[index+1][1][limit]-s[index];
+                    }
+                    else{
+                        notrade=dp[index+1][1][limit];
+                        trade=s[index]+dp[index+1][0][limit-1];
+                    }
+                    dp[index][buy][limit]=max(trade,notrade);
+                }
+            }
+        }
+        return dp[0][0][2];
+    }
+    int tabso(vector<int> &s){
+        vector<vector<int>> curr(2,vector<int>(4,0));
+        vector<vector<int>> next(2,vector<int>(4,0));
+        for(int index=s.size()-1;index>=0;index--){
+            for(int buy=1;buy>=0;buy--){
+                for(int limit=1;limit<3;limit++){
+                    int trade=0,notrade=0;
+                    if(buy==0){
+                        notrade=next[0][limit];
+                        trade=next[1][limit]-s[index];
+                    }
+                    else{
+                        notrade=next[1][limit];
+                        trade=s[index]+next[0][limit-1];
+                    }
+                    curr[buy][limit]=max(trade,notrade);
+                }
+            }
+            next=curr;
+        }
+        return next[0][2];
+    }
+    int maxProfit(vector<int>& prices) {
+        return tabso(prices);
+        //return tab(prices);
+        /* vector<vector<vector<int>>> dp(prices.size()+1,vector<vector<int>>(2,vector<int>(3,-1)));
+        return memo(prices,0,0,2,dp); */
+        //return rec(prices,0,0,2);
+    }
+};
