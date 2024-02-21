@@ -1,0 +1,30 @@
+//baki code leetcode 122 se q
+public:
+    int spaceopt(vector<int> &s,int &fee){
+        vector<int> curr(2,0);
+        vector<int> next(2,0);
+        for(int index=s.size()-1;index>=0;index--){
+            for(int buy=1;buy>=0;buy--){
+                int trade=0,notrade=0;
+                if(buy==0){
+                    notrade=next[0];
+                    trade=next[1]-s[index];
+                }
+                else{
+                    notrade=next[1];
+                    trade=s[index]+next[0]-fee;
+                }
+                curr[buy]=max(trade,notrade);
+            }
+            next=curr;
+        }
+        return curr[0];
+    }
+    int maxProfit(vector<int>& prices, int fee) {
+        return spaceopt(prices,fee);
+        //return tab(prices);
+        /* vector<vector<int>> dp(2,vector<int>(prices.size()+1,-1));
+        return memo(prices,buy,0,dp); */
+        //return maxp(prices,buy,0);
+    }
+};
