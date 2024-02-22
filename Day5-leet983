@@ -1,0 +1,57 @@
+https://leetcode.com/problems/minimum-cost-for-tickets/
+
+//this involve 1-d approach--- 
+class Solution {
+public: 
+    int rec(vector<int>& d,vector<int>& cost,int index){
+        if(index>=d.size()) return 0;
+        int cost1=cost[0]+rec(d,cost,index+1);
+        int j=index;
+        int passday=d[index]+7-1;
+        while(j<d.size() && d[j]<=passday) j++;
+        int cost2=cost[1]+rec(d,cost,j);
+        j=index;
+        passday=d[index]+30-1;
+        while(j<d.size() && d[j]<=passday) j++;
+        int cost3=cost[2]+rec(d,cost,j);
+        return min(cost1,min(cost2,cost3));
+    }
+    // "& " dp me nhi lagao to memory limit exceed hogi
+    int memo(vector<int>& days,vector<int>& cost,int index,vector<int>& dp){
+        if(index>=days.size()) return 0;
+        if(dp[index]!=-1) return dp[index];
+        int cost1=cost[0]+memo(days,cost,index+1,dp);
+        int j=index;
+        int passday=days[index]+7-1;
+        while(j<days.size() && days[j]<=passday) j++;
+        int cost2=cost[1]+memo(days,cost,j,dp);
+        j=index;
+        passday=days[index]+30-1;
+        while(j<days.size() && days[j]<=passday) j++;
+        int cost3=cost[2]+memo(days,cost,j,dp);
+        dp[index]=min(cost1,min(cost2,cost3));
+        return dp[index];
+    }
+    int bottumup(vector<int>& days,vector<int>& cost){
+        vector<int> dp(days.size()+1,0);
+        for(int index=days.size()-1;index>=0;index--){
+            int cost1=cost[0]+dp[index+1];
+            int j=index;
+            int passday=days[index]+7-1;
+            while(j<days.size() && days[j]<=passday) j++;
+            int cost2=cost[1]+dp[j];
+            j=index;
+            passday=days[index]+30-1;
+            while(j<days.size() && days[j]<=passday) j++;
+            int cost3=cost[2]+dp[j];
+            dp[index]=min(cost1,min(cost2,cost3));
+        }
+        return dp[0];
+    }
+    int mincostTickets(vector<int>& days, vector<int>& costs) {
+      return bottumup(days,costs);
+      /* vector<int> dp(days.size()+1,-1);
+      return memo(days,costs,0,dp); */
+      //return rec(days,costs,0);  
+    }
+};
