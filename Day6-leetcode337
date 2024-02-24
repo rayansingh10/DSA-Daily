@@ -1,0 +1,38 @@
+https://leetcode.com/problems/house-robber-iii/submissions/1184777125/
+
+//why we can't use bottum up :- because for that we need to go to leaf node and we can only go to the leaf node 
+//by traversing from root to leaf i.e is top_down so it does't make any sense here
+class Solution {
+public:
+    int rec(TreeNode* root){
+        if(root==NULL) return 0;
+        int robbed=0,notrobbed=0;
+        robbed=robbed+root->val;
+        if(root->left){
+            robbed+=rec(root->left->left) +rec(root->left->right);
+        }
+        if(root->right) robbed+=rec(root->right->left)+rec(root->right->right);
+        //notrobbed
+        notrobbed=0+rec(root->left)+rec(root->right);
+        return max(robbed,notrobbed);
+    }
+    int memo(TreeNode* root,unordered_map<TreeNode*,int>& dp){
+        if(root==NULL) return 0;
+        if(dp.find(root)!=dp.end()) return dp[root];
+        int robbed=0,notrobbed=0;
+        robbed=robbed+root->val;
+         if(root->left){
+            robbed+=memo(root->left->left,dp) +memo(root->left->right,dp);
+        }
+        if(root->right) robbed+=memo(root->right->left,dp)+memo(root->right->right,dp);
+        //notrobbed
+        notrobbed=0+memo(root->left,dp)+memo(root->right,dp);
+        dp[root]=max(robbed,notrobbed);
+        return dp[root];
+    }
+    int rob(TreeNode* root) {
+        unordered_map<TreeNode*,int> dp;
+        return memo(root,dp);
+        //return rec(root);
+    }
+};
