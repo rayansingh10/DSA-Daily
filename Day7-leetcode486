@@ -1,0 +1,43 @@
+https://leetcode.com/problems/predict-the-winner/description/
+//thoda confusing hai because of optimal approach of each player : subtract karne se even plaers ke add honge or
+//odd ke subtract like 1-(5-2). so player1: 1+2. and player2: 5; 
+class Solution {
+public:
+    int rec(vector<int>& nums,int start,int end){
+        if(start==end) return nums[start];
+        int bystart=nums[start]-rec(nums,start+1,end);
+        int byend=nums[end]-rec(nums,start,end-1);
+        //max isliye kyuki each player is playing optimally(would look for its max score)
+        return max(bystart,byend);
+    }
+    int memo(vector<int>& nums,int start,int end,vector<vector<int>> &dp){
+        if(start==end) return nums[start];
+        if(dp[start][end]!=-1) return dp[start][end];
+        int bystart=nums[start]-memo(nums,start+1,end,dp);
+        int byend=nums[end]-memo(nums,start,end-1,dp);
+        dp[start][end]=max(bystart,byend);
+        return dp[start][end];
+    }
+    int bottumup(vector<int>& nums){
+        vector<vector<int>> dp(nums.size()+1,vector<int>(nums.size()+1,0));
+        for(int i=0;i<nums.size();i++) dp[i][i]=nums[i];
+        for(int start=nums.size()-1;start>=0;start--){
+            for(int end=0;end<nums.size();end++){
+                if(start<end){
+                    int bystart=nums[start]-dp[start+1][end];
+                    int byend=nums[end]-dp[start][end-1];
+                    dp[start][end]=max(bystart,byend);
+                }
+            }
+        }
+        return dp[0][nums.size()-1];
+    }
+    bool predictTheWinner(vector<int>& nums) {
+        int ans;
+        ans=bottumup(nums);
+        /* vector<vector<int>> dp(nums.size()+1,vector<int>(nums.size()+1,-1));
+        ans=memo(nums,0,nums.size()-1,dp); */
+        //ans=rec(nums,0,nums.size()-1);
+        return ans>=0 ? true:false;
+    }
+};
