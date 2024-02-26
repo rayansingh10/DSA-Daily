@@ -1,6 +1,6 @@
 https://leetcode.com/problems/predict-the-winner/description/
 //thoda confusing hai because of optimal approach of each player : subtract karne se even plaers ke add honge or
-//odd ke subtract like 1-(5-2). so player1: 1+2. and player2: 5; 
+//odd ke subtract like 1-(5-2). so player1: 1+2. and player 2: 5; 
 class Solution {
 public:
     int rec(vector<int>& nums,int start,int end){
@@ -32,9 +32,42 @@ public:
         }
         return dp[0][nums.size()-1];
     }
+    //1d approach with 2 array
+    int opt(vector<int>& nums){
+        vector<int> curr(nums.size()+1,0);
+        vector<int> next(nums.size()+1,0);
+        for(int start=nums.size()-1;start>=0;start--){
+            curr[start]=nums[start];
+            for(int end=0;end<nums.size();end++){
+                if(start<end){
+                    int bystart=nums[start]-next[end];
+                    int byend=nums[end]-curr[end-1];
+                    curr[end]=max(bystart,byend);
+                }
+            }
+            next=curr;
+        }
+        return next[nums.size()-1];
+    }
+    //1-d approach with one array
+    int opt2(vector<int>& nums){
+        vector<int> curr(nums.size()+1,0);
+        for(int start=nums.size()-1;start>=0;start--){
+            curr[start]=nums[start];
+            for(int end=0;end<nums.size();end++){
+                if(start<end){
+                    int bystart=nums[start]-curr[end];
+                    int byend=nums[end]-curr[end-1];
+                    curr[end]=max(bystart,byend);
+                }
+            }
+        }
+        return curr[nums.size()-1];
+    }
     bool predictTheWinner(vector<int>& nums) {
         int ans;
-        ans=bottumup(nums);
+        ans=opt2(nums);
+       // ans=bottumup(nums);
         /* vector<vector<int>> dp(nums.size()+1,vector<int>(nums.size()+1,-1));
         ans=memo(nums,0,nums.size()-1,dp); */
         //ans=rec(nums,0,nums.size()-1);
