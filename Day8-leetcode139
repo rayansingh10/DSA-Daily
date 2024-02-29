@@ -1,0 +1,56 @@
+https://leetcode.com/problems/word-break/description/
+
+class Solution {
+public:
+    unordered_map<string,bool> hash;
+    bool rec(string &s,int index){
+        if(index==s.size()) return true;
+        string word="";
+        bool ans=false;
+        for(int i=index;i<s.size();i++){
+            word+=s[i];
+            if(hash.find(word)!=hash.end()){
+                ans=ans || rec(s,i+1);
+            }
+        }
+        return ans;
+    }
+    bool memo(string &s,int index,vector<int> &dp){
+        if(index==s.size()) return true;
+        if(dp[index]!=-1) return dp[index];
+        string word="";
+        bool ans=false;
+        for(int i=index;i<s.size();i++){
+            word+=s[i];
+            if(hash.find(word)!=hash.end()){
+                ans=ans || memo(s,i+1,dp);
+            }
+        }
+        return dp[index]=ans;
+    }
+    bool bottumup(string &s){
+        vector<int> dp(s.size()+1,-1);
+        dp[s.size()]=true;
+        for(int index=s.size()-1;index>=0;index--){
+            string word="";
+            bool ans=false;
+            for(int i=index;i<s.size();i++){
+                word+=s[i];
+                if(hash.find(word)!=hash.end()){
+                    ans=ans || dp[i+1];
+                }
+            }
+            dp[index]=ans;
+        }
+        return dp[0];
+    }
+    bool wordBreak(string s,vector<string>& wordDict) {
+        for(auto i : wordDict){
+            hash[i]=true;
+        }
+        return bottumup(s);
+        /* vector<int> dp(s.size()+1,-1);
+        return memo(s,0,dp); */
+        //return rec(s,0);
+    }
+};
