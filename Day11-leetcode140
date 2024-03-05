@@ -1,0 +1,32 @@
+https://leetcode.com/problems/word-break-ii/
+
+class Solution {
+public:
+    unordered_map<string,bool> hash;
+    vector<string> rec(string &s,int index){
+        vector<string> ans;
+        if(index==s.size()){
+            ans.push_back("");
+            return ans;
+        }
+        string word="";
+        for(int i=index;i<s.size();i++){
+            word+=s[i];
+            if(hash.find(word)!=hash.end()){
+                vector<string> ansrec=rec(s,i+1);
+                if(ansrec.size()>=1){
+                    for(auto k : ansrec){
+                        ans.push_back(k.size()==0? word :word+" "+k);
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        for(auto i : wordDict){
+            hash[i]=true;
+        }
+        return rec(s,0);
+    }
+};
