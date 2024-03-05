@@ -3,6 +3,29 @@ https://leetcode.com/problems/word-break-ii/
 class Solution {
 public:
     unordered_map<string,bool> hash;
+    //it is 1d approach but since return type is vector of string therefore it looks like 2d dp
+    vector<string> memo(string &s,int index,vector<vector<string>> &dp){
+        vector<string> ans;
+        if(index==s.size()){
+            ans.push_back("");
+            return ans;
+        }
+        if(dp[index].size()!=0) return dp[index];
+        string word="";
+        for(int i=index;i<s.size();i++){
+            word+=s[i];
+            if(hash.find(word)!=hash.end()){
+                vector<string> ansrec=memo(s,i+1,dp);
+                if(ansrec.size()>=1){
+                    for(auto k : ansrec){
+                        ans.push_back(k.size()==0? word :word+" "+k);
+                    }
+                }
+            }
+        }
+        return dp[index]=ans;
+    }
+    //it can be passed by recursion also 
     vector<string> rec(string &s,int index){
         vector<string> ans;
         if(index==s.size()){
