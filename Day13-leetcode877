@@ -1,5 +1,16 @@
 https://leetcode.com/problems/stone-game/
+//optimal approach
+class Solution {
+public:
+    bool stoneGame(vector<int>& piles) {
+        //there will be atleast one chance where alice will win 
+        //then we should return true
+        //problem is asking is there any chance alice can win
+        return true;
+    }
+};
 
+//dp approach
 class Solution {
 public:
     int rec(vector<int>& piles,int start,int end){
