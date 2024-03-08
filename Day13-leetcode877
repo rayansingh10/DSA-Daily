@@ -1,0 +1,37 @@
+https://leetcode.com/problems/stone-game/
+
+class Solution {
+public:
+    int rec(vector<int>& piles,int start,int end){
+        if(start>end) return 0;
+        int first=piles[start]-rec(piles,start+1,end);
+        int last=piles[end]-rec(piles,start,end-1);
+        return max(first,last);
+    }
+    int memo(vector<int>& piles,int start,int end,vector<vector<int>>& dp){
+        if(start>end) return 0;
+        if(dp[start][end]!=-1) return dp[start][end];
+        int first=piles[start]-memo(piles,start+1,end,dp);
+        int last=piles[end]-memo(piles,start,end-1,dp);
+        return dp[start][end]=max(first,last);
+    }
+    int bottum(vector<int>& piles){
+        vector<vector<int>> dp(piles.size()+1,vector<int>(piles.size()+1,0));
+        for(int start=piles.size()-1;start>=0;start--){
+            for(int end=0;end<piles.size();end++){
+                if(start>=end) continue;
+                int first=piles[start]-dp[start+1][end];
+                int last=piles[end]-dp[start][end-1];
+                dp[start][end]=max(first,last);
+            }
+        }
+        return dp[0][piles.size()-1];
+    }
+    bool stoneGame(vector<int>& piles) {
+        int n=piles.size();
+        //return bottum(piles);
+        vector<vector<int>> dp(n+1,vector<int>(n+1,-1));
+        return memo(piles,0,n-1,dp);
+        //return rec(piles,0,n-1);
+    }
+};
