@@ -1,0 +1,33 @@
+https://leetcode.com/problems/burst-balloons/
+
+
+class Solution {
+public:
+    int rec(vector<int>& nums,int start,int end){
+        if(start>end) return 0;
+        int ans=0;
+        for(int i=start;i<=end;i++){
+            int t=nums[start-1]*nums[i]*nums[end+1]+rec(nums,i+1,end)+rec(nums,start,i-1);
+            ans=max(ans,t);
+        }
+        return ans;
+    }
+    int memo(vector<int>& nums,int start,int end,vector<vector<int>>& dp){
+        if(start>end) return 0;
+        if(dp[start][end]!=-1) return dp[start][end];
+        int ans=0;
+        for(int i=start;i<=end;i++){
+            int t=nums[start-1]*nums[i]*nums[end+1]+memo(nums,i+1,end,dp)+memo(nums,start,i-1,dp);
+            ans=max(ans,t);
+        }
+        return dp[start][end]=ans;
+    }
+    int maxCoins(vector<int>& nums) {
+        nums.insert(nums.begin(),1);
+        nums.push_back(1);
+        int n=nums.size();
+        vector<vector<int>> dp(n+1,vector<int>(n+1,-1));
+        return memo(nums,1,n-2,dp);
+        //return rec(nums,1,n-2);
+    }
+};
