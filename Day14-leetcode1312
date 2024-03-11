@@ -1,4 +1,6 @@
 https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/
+//2 approach given below //
+
 
 class Solution {
 public:
@@ -46,3 +48,34 @@ public:
        //return rec(s,0,s.size()-1);
     }
 };
+
+
+//2nd approach-using longest palindromic subsequence 
+int tabulationso(string &a,string &b){
+        vector<int> curr(b.length()+1,0);
+        vector<int> next(b.length()+1,0);
+        for(int i=a.length()-1;i>=0;i--){
+            for(int j=b.length()-1;j>=0;j--){
+                int ans=0;
+                if(a[i]==b[j]) ans=1+next[j+1];
+                else{
+                    ans=max(next[j],curr[j+1]);
+                }
+                curr[j]=ans;
+            }
+            next=curr;
+        }
+        return next[0];
+    }
+    int longestPalindromeSubseq(string &s) {
+        string a=s;
+        reverse(s.begin(),s.end());
+        return tabulationso(a,s);
+    }
+    int minInsertions(string s) {
+        //length of longest palindromic subsequence 
+        int l=longestPalindromeSubseq(s);
+        //characters not involved in longest palindromic subsequence will be reuired to make it 
+        //palindrome
+        return s.size()-l;
+    }
