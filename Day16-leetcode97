@@ -1,0 +1,44 @@
+https://leetcode.com/problems/interleaving-string/
+
+// memo function will take less time while submitting 
+
+class Solution {
+public:
+    bool rec(string &s1, string &s2,string &s3,int i,int j,int k){
+        if(k>=s3.size() && i>=s1.size() && j>=s2.size()) return true;
+        bool ans=false;
+        if(i<s1.size() && s1[i]==s3[k]) ans=ans||rec(s1,s2,s3,i+1,j,k+1);
+        if(j<s2.size() && s2[j]==s3[k]) ans =ans || rec(s1,s2,s3,i,j+1,k+1);
+        return ans;
+    }
+    bool memo(string &s1, string &s2,string &s3,int i,int j,int k,vector<vector<vector<int>>> &dp){
+        if(k>=s3.size() && i>=s1.size() && j>=s2.size()) return true;
+        if(dp[i][j][k]!=-1) return dp[i][j][k];
+        bool ans=false;
+        if(i<s1.size() && s1[i]==s3[k]) ans=ans||memo(s1,s2,s3,i+1,j,k+1,dp);
+        if(j<s2.size() && s2[j]==s3[k]) ans =ans || memo(s1,s2,s3,i,j+1,k+1,dp);
+        return dp[i][j][k]=ans;
+    }
+    bool Bottumup(string &s1, string &s2, string &s3){
+        vector<vector<vector<int>>> dp(s1.size()+1,vector<vector<int>>(s2.size()+1,vector<int>(s3.size()+1,0)));
+        dp[s1.size()][s2.size()][s3.size()]=true;
+        for(int i=s1.size();i>=0;i--){
+            for(int j=s2.size();j>=0;j--){
+                for(int k=s3.size();k>=0;k--){
+                    if(k>=s3.size() && i>=s1.size() && j>=s2.size()) continue;
+                    bool ans=false;
+                    if(i<s1.size() && s1[i]==s3[k]) ans=ans||dp[i+1][j][k+1];
+                    if(j<s2.size() && s2[j]==s3[k]) ans =ans ||dp[i][j+1][k+1];
+                    dp[i][j][k]=ans;
+                }
+            }
+        }
+        return dp[0][0][0];
+    }
+    bool isInterleave(string s1, string s2, string s3) {
+        return Bottumup(s1,s2,s3);
+        /* vector<vector<vector<int>>> dp(s1.size()+1,vector<vector<int>>(s2.size()+1,vector<int>(s3.size()+1,-1)));
+        return memo(s1,s2,s3,0,0,0,dp); */
+        //return rec(s1,s2,s3,0,0,0);
+    }
+};
