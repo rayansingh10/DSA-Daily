@@ -1,0 +1,72 @@
+https://leetcode.com/problems/longest-increasing-subsequence/
+
+//2aapproach to the question
+
+
+class Solution {
+public:
+    int solveoptimal(vector<int>& nums){
+        vector<int> ans;
+        for(int i=0;i<nums.size();i++){
+            auto index=lower_bound(ans.begin(),ans.end(),nums[i]);
+            if(index==ans.end()) ans.push_back(nums[i]);
+            else *index=nums[i];
+        }
+        return ans.size();
+    }
+    int rec(vector<int>& nums,int prev,int curr){
+        if(curr==nums.size()) return 0;
+        int include=INT_MIN;
+        if(prev==-1 || nums[prev]<nums[curr])
+        include=1+rec(nums,curr,curr+1);
+        int exclude=rec(nums,prev,curr+1);
+        return max(include,exclude);
+    }
+    int td(vector<int>& nums,int prev,int curr,vector<vector<int>> &dp){
+        if(curr==nums.size()) return 0;
+        if(dp[curr][prev+1]!=-1) return dp[curr][prev];
+        int include=INT_MIN;
+        if(prev==-1 || nums[prev]<nums[curr])
+        include=1+td(nums,curr,curr+1,dp);
+        int exclude=td(nums,prev,curr+1,dp);
+        return dp[curr][prev+1]=max(include,exclude);
+    }
+    int bu(vector<int>& nums){
+        vector<vector<int>> dp(nums.size()+1,vector<int>(nums.size()+1,0));
+        //yaha galti karega (prev wale loop me)
+        for(int curr=nums.size()-1;curr>=0;curr--){
+            for(int prev=curr-1;prev>=-1;prev--){
+                int include=INT_MIN;
+                if(prev==-1 || nums[prev]<nums[curr])
+                include=1+dp[curr+1][curr+1];
+                int exclude=dp[curr+1][prev+1];
+                dp[curr][prev+1]=max(include,exclude);
+            }
+        }
+        return dp[0][0];
+    }
+    int buso(vector<int>& nums){
+        vector<int> cu(nums.size()+1,0);
+        vector<int> next(nums.size()+1,0);
+        //yaha galti karega (prev wale loop me)
+        for(int curr=nums.size()-1;curr>=0;curr--){
+            for(int prev=curr-1;prev>=-1;prev--){
+                int include=INT_MIN;
+                if(prev==-1 || nums[prev]<nums[curr])
+                include=1+next[curr+1];
+                int exclude=next[prev+1];
+                cu[prev+1]=max(include,exclude);
+            }
+            next=cu;
+        }
+        return next[0];
+    }
+    
+    int lengthOfLIS(vector<int>& nums) {
+        return solveoptimal(nums);
+        //return buso(nums);
+        /* vector<vector<int>> dp(nums.size()+1,vector<int>(nums.size()+1,-1));
+        return td(nums,-1,0,dp); */
+        //return rec(nums,-1,0);
+    }
+};
