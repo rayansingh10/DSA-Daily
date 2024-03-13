@@ -1,0 +1,34 @@
+https://leetcode.com/problems/minimum-number-of-removals-to-make-mountain-array/description/
+
+//first see day 18 code 
+//based on the optimal approach 
+
+
+
+class Solution {
+public:
+    //LIS based pattern 
+    void LIS(vector<int>& nums,vector<int>& len){
+        vector<int> ans;
+        for(int i=0;i<nums.size();i++){
+            auto index=lower_bound(ans.begin(),ans.end(),nums[i]);
+            if(index==ans.end()){
+                ans.push_back(nums[i]);
+            }
+            else  *index=nums[i];
+            len.push_back(ans.size());
+        }
+    }
+    int minimumMountainRemovals(vector<int>& nums) {
+        vector<int> lis,lds;
+        LIS(nums,lis);
+        reverse(nums.begin(),nums.end());
+        LIS(nums,lds);
+        int ans=0;
+        for(int i=0;i<nums.size();i++){
+            if(lis[i]==1 || lds[nums.size()-i-1]==1) continue;
+            ans=max(ans,lis[i]+lds[nums.size()-i-1]-1);
+        }
+        return nums.size()-ans;
+    }
+};
