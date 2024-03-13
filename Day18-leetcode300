@@ -1,7 +1,7 @@
 https://leetcode.com/problems/longest-increasing-subsequence/
 
 //2aapproach to the question
-
+// LIS -> many questions are based on this pattern
 
 class Solution {
 public:
