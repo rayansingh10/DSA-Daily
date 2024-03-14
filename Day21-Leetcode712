@@ -1,0 +1,86 @@
+https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/description/
+
+//approach from recursion to dp(topdown) to dp[bottum up]
+
+
+class Solution {
+public:
+    int rec(string &s1,string &s2,int i,int j){
+        if(i>=s1.size() && j>=s2.size()) return 0;
+        if(i>=s1.size()){
+            int ans=0;
+            while(j<s2.size()){
+                ans=ans+s2[j];
+                j++;
+            }
+            return ans;
+        }
+        if(j>=s2.size()){
+            int ans=0;
+            while(i<s1.size()){
+                ans=ans+s1[i];
+                i++;
+            }
+            return ans;
+        }
+        int ans=INT_MAX;
+        if(s1[i]==s2[j]) ans=rec(s1,s2,i+1,j+1);
+        ans=min(ans,s1[i]+rec(s1,s2,i+1,j));
+        ans=min(ans,s2[j]+rec(s1,s2,i,j+1));
+        return ans;  
+    }
+    int memo(string &s1,string &s2,int i,int j,vector<vector<int>> &dp){
+        if(i>=s1.size() && j>=s2.size()) return 0;
+        if(i>=s1.size()){
+            int ans=0;
+            while(j<s2.size()){
+                ans=ans+s2[j];
+                j++;
+            }
+            return ans;
+        }
+        if(j>=s2.size()){
+            int ans=0;
+            while(i<s1.size()){
+                ans=ans+s1[i];
+                i++;
+            }
+            return ans;
+        }
+        if(dp[i][j]!=-1) return dp[i][j];
+        int ans=INT_MAX;
+        if(s1[i]==s2[j]) ans=memo(s1,s2,i+1,j+1,dp);
+        ans=min(ans,s1[i]+memo(s1,s2,i+1,j,dp));
+        ans=min(ans,s2[j]+memo(s1,s2,i,j+1,dp));
+        return dp[i][j]=ans;  
+    }
+    int bottum(string &s1,string &s2){
+        vector<vector<int>> dp(s1.size()+1,vector<int>(s2.size()+1,0));
+        int ans=0;
+        for(int i=s2.size()-1;i>=0;i--){
+            ans=ans+s2[i];
+            dp[s1.size()][i]=ans;
+        }
+        ans=0;
+        for(int i=s1.size()-1;i>=0;i--){
+            ans=ans+s1[i];
+            dp[i][s2.size()]=ans;
+        }
+        for(int i=s1.size()-1;i>=0;i--){
+            for(int j=s2.size()-1;j>=0;j--){
+                int ans=INT_MAX;
+                if(s1[i]==s2[j]) ans=dp[i+1][j+1];
+                ans=min(ans,s1[i]+dp[i+1][j]);
+                ans=min(ans,s2[j]+dp[i][j+1]);
+                dp[i][j]=ans;
+            }
+        }
+        return dp[0][0];
+    }
+    int minimumDeleteSum(string s1, string s2) {
+        return bottum(s1,s2);
+        /* vector<vector<int>> dp(s1.size()+1,vector<int>(s2.size()+1,-1));
+        return memo(s1,s2,0,0,dp); */
+        //return rec(s1,s2,0,0);
+    }
+};
