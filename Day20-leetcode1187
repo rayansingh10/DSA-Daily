@@ -1,0 +1,39 @@
+https://leetcode.com/problems/make-array-strictly-increasing/description/
+
+class Solution {
+public:
+    //asli array ko mt change kar jo 2 elements use ho rahe unpe focus kar like arr[i-1] ko prev se karde
+    //har ek array[i] uske prev se just bada rakh ke dekh or ekbaar mt rakh simple ;
+    int rec(vector<int>& arr1, vector<int>& arr2,int i,int prev){
+        if(i>=arr1.size()) return 0;
+        int t=INT_MAX,r=INT_MAX;
+        if(arr1[i]>prev) t=rec(arr1,arr2,i+1,arr1[i]);
+        auto index=upper_bound(arr2.begin(),arr2.end(),prev);
+        if(index!=arr2.end()){
+            prev=arr2[index-arr2.begin()];
+            r=rec(arr1,arr2,i+1,prev);
+            if(r!=INT_MAX) r=r+1;//1operation was succesfull;
+        }
+        return min(r,t);
+    }
+    int memo(vector<int>& arr1, vector<int>& arr2,int prev,int i,map<pair<int,int>, int>&dp){
+        if(i>=arr1.size()) return 0;
+        if(dp.find({prev,i})!= dp.end()) return dp[{prev,i}];
+        int t=INT_MAX,r=INT_MAX;
+        if(arr1[i]>prev) t=memo(arr1,arr2,arr1[i],i+1,dp);
+        auto index=upper_bound(arr2.begin(),arr2.end(),prev);
+        if(index!=arr2.end()){
+            //prev ki value yaha mt change kar dena warna dp[{prev,i} ki value change hojayegi]
+            r=memo(arr1,arr2,arr2[index-arr2.begin()],i+1,dp);
+            if(r!=INT_MAX) r=r+1;//1operation was succesfull;
+        }
+        return dp[{prev,i}]=min(r,t);
+    }
+    int makeArrayIncreasing(vector<int>& arr1, vector<int>& arr2) {
+        sort(arr2.begin(),arr2.end());
+        //int ans=rec(arr1,arr2,0,-1);
+        map<pair<int,int>,int> dp;
+        int ans=memo(arr1,arr2,-1,0,dp); 
+        return ans==INT_MAX ?  -1:  ans ;
+    }
+};
