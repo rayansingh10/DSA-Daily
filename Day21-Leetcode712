@@ -25,8 +25,10 @@ public:
         }
         int ans=INT_MAX;
         if(s1[i]==s2[j]) ans=rec(s1,s2,i+1,j+1);
-        ans=min(ans,s1[i]+rec(s1,s2,i+1,j));
-        ans=min(ans,s2[j]+rec(s1,s2,i,j+1));
+        else{
+            ans=min(ans,s1[i]+rec(s1,s2,i+1,j));
+            ans=min(ans,s2[j]+rec(s1,s2,i,j+1));
+        }
         return ans;  
     }
     int memo(string &s1,string &s2,int i,int j,vector<vector<int>> &dp){
@@ -50,8 +52,9 @@ public:
         if(dp[i][j]!=-1) return dp[i][j];
         int ans=INT_MAX;
         if(s1[i]==s2[j]) ans=memo(s1,s2,i+1,j+1,dp);
-        ans=min(ans,s1[i]+memo(s1,s2,i+1,j,dp));
-        ans=min(ans,s2[j]+memo(s1,s2,i,j+1,dp));
+        else{
+            ans=min(ans,s1[i]+memo(s1,s2,i+1,j,dp));
+            ans=min(ans,s2[j]+memo(s1,s2,i,j+1,dp));}
         return dp[i][j]=ans;  
     }
     int bottum(string &s1,string &s2){
@@ -70,8 +73,9 @@ public:
             for(int j=s2.size()-1;j>=0;j--){
                 int ans=INT_MAX;
                 if(s1[i]==s2[j]) ans=dp[i+1][j+1];
-                ans=min(ans,s1[i]+dp[i+1][j]);
-                ans=min(ans,s2[j]+dp[i][j+1]);
+                else{
+                    ans=min(ans,s1[i]+dp[i+1][j]);
+                    ans=min(ans,s2[j]+dp[i][j+1]);}
                 dp[i][j]=ans;
             }
         }
@@ -79,8 +83,8 @@ public:
     }
     int minimumDeleteSum(string s1, string s2) {
         return bottum(s1,s2);
-        /* vector<vector<int>> dp(s1.size()+1,vector<int>(s2.size()+1,-1));
-        return memo(s1,s2,0,0,dp); */
+        /*vector<vector<int>> dp(s1.size()+1,vector<int>(s2.size()+1,-1));
+        return memo(s1,s2,0,0,dp);*/
         //return rec(s1,s2,0,0);
     }
 };
