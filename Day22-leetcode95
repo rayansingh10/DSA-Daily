@@ -6,73 +6,41 @@ https://leetcode.com/problems/unique-binary-search-trees-ii/description/
 class Solution {
 public:
     vector<TreeNode*> rec(int start,int end){
+        if(start>end) return {0};
         if(start==end) return {new TreeNode(start)};
         vector<TreeNode*> ans;
         for(int i=start;i<=end;i++){
             auto leftpart=rec(start,i-1);
             auto rightpart=rec(i+1,end);
-            if(leftpart.size()==0 && rightpart.size()==0) ans.push_back(new TreeNode(i));
-            else if(leftpart.size()==0){
-                for(int j=0;j<rightpart.size();j++){
+            for(int j=0;j<rightpart.size();j++){
+                for(int k=0;k<leftpart.size();k++){
                     TreeNode* root=new TreeNode(i);
                     root->right=rightpart[j];
+                    root->left=leftpart[k];
                     ans.push_back(root);
-                }
-            }
-            else if(rightpart.size()==0){
-                for(int j=0;j<leftpart.size();j++){
-                    TreeNode* root=new TreeNode(i);
-                    root->left=leftpart[j];
-                    ans.push_back(root);
-                }
-            }
-            else{
-                for(int j=0;j<rightpart.size();j++){
-                    for(int k=0;k<leftpart.size();k++){
-                        TreeNode* root=new TreeNode(i);
-                        root->right=rightpart[j];
-                        root->left=leftpart[k];
-                        ans.push_back(root);
-                    }
                 }
             }
         }
         return ans;   
     }
     vector<TreeNode*> memo(int start,int end,map<pair<int,int>,vector<TreeNode*>> &dp){
+        if(start>end) return {0};
         if(start==end) return {new TreeNode(start)};
         if(dp.find({start,end})!=dp.end()) return dp[{start,end}];
         vector<TreeNode*> ans;
         for(int i=start;i<=end;i++){
             auto leftpart=memo(start,i-1,dp);
             auto rightpart=memo(i+1,end,dp);
-            if(leftpart.size()==0 && rightpart.size()==0) ans.push_back(new TreeNode(i));
-            else if(leftpart.size()==0){
-                for(int j=0;j<rightpart.size();j++){
+            for(int j=0;j<rightpart.size();j++){
+                for(int k=0;k<leftpart.size();k++){
                     TreeNode* root=new TreeNode(i);
                     root->right=rightpart[j];
+                    root->left=leftpart[k];
                     ans.push_back(root);
                 }
             }
-            else if(rightpart.size()==0){
-                for(int j=0;j<leftpart.size();j++){
-                    TreeNode* root=new TreeNode(i);
-                    root->left=leftpart[j];
-                    ans.push_back(root);
-                }
-            }
-            else{
-                for(int j=0;j<rightpart.size();j++){
-                    for(int k=0;k<leftpart.size();k++){
-                        TreeNode* root=new TreeNode(i);
-                        root->right=rightpart[j];
-                        root->left=leftpart[k];
-                        ans.push_back(root);
-                    }
-                }
-            }
-        }
-        return dp[{start,end}]=ans;   
+        }  
+        return dp[{start,end}]=ans;
     }
     vector<TreeNode*> generateTrees(int n) {
         map<pair<int,int>,vector<TreeNode*>> dp;
