@@ -1,0 +1,56 @@
+https://leetcode.com/problems/stone-game-iii/description/
+
+//rec will give time limit exceed 
+//so memorization or bottumup approach will work here
+
+
+class Solution {
+public:
+    int rec(vector<int>& s,int index){
+        if(index>=s.size()) return 0;
+        int total=0;
+        int ans=INT_MIN;
+        for(int x=1;x<=3;x++){
+            if(index+x-1>=s.size()) continue;
+            total+=s[index+x-1];
+            ans=max(ans,total-rec(s,index+x));
+        }
+        return ans;
+    }
+    int memo(vector<int>& s,int index,vector<int> &dp){
+        if(index>=s.size()) return 0;
+        if(dp[index]!=-1) return dp[index];
+        int total=0;
+        int ans=INT_MIN;
+        for(int x=1;x<=3;x++){
+            if(index+x-1>=s.size()) continue;
+            total+=s[index+x-1];
+            ans=max(ans,total-memo(s,index+x,dp));
+        }
+        return dp[index]=ans;
+    }
+    int bottum(vector<int>& s){
+        vector<int> dp(s.size()+1,0);
+        for(int index=s.size()-1;index>=0;index--){
+            int total=0;
+            int ans=INT_MIN;
+            for(int x=1;x<=3;x++){
+                if(index+x-1>=s.size()) continue;
+                total+=s[index+x-1];
+                ans=max(ans,total-dp[index+x]);
+            }
+            dp[index]=ans;
+        }
+        return dp[0];
+    }
+    string stoneGameIII(vector<int>& s) {
+        int ans;
+        ans=bottum(s);
+        /* vector<int> dp(s.size()+1,-1);
+        ans=memo(s,0,dp); */
+        //ans=rec(s,0);
+        if(ans==0) return "Tie";
+        if(ans>0) return "Alice";
+        return "Bob";
+    }
+};
