@@ -1,0 +1,58 @@
+https://leetcode.com/problems/stone-game-ii/description/
+
+//memo is taking less time
+
+class Solution {
+public:
+    int rec(vector<int>& piles,int i,int m,bool alice){
+        if(i>=piles.size()) return 0;
+        int ans= alice? INT_MIN : INT_MAX;
+        int total=0;
+        for(int x=1;x<=2*m;x++){
+            if(x+i-1>=piles.size()) continue;
+            total+=piles[x+i-1];
+            if(alice) ans=max(ans,total+rec(piles,i+x,max(m,x),0));
+            else    ans=min(ans,rec(piles,i+x,max(m,x),1));
+        }
+        return ans;
+    }
+    int memo(vector<int>& piles,int i,int m,bool alice,vector<vector<vector<int>>> &dp){
+        if(i>=piles.size()) return 0;
+        if(dp[i][m][alice]!=-1) return dp[i][m][alice];
+        int ans= alice? INT_MIN : INT_MAX;
+        int total=0;
+        for(int x=1;x<=2*m;x++){
+            if(x+i-1>=piles.size()) continue;
+            total+=piles[x+i-1];
+            if(alice) ans=max(ans,total+memo(piles,i+x,max(m,x),0,dp));
+            else    ans=min(ans,memo(piles,i+x,max(m,x),1,dp));
+        }
+        return dp[i][m][alice]= ans;
+    }
+    int bottumup(vector<int>& piles,int &n){
+        vector<vector<vector<int>>> dp(n+1,vector<vector<int>>(n+1,vector<int>(2,0)));
+        for(int i=piles.size()-1;i>=0;i--){
+            for(int m=piles.size();m>=1;m--){
+                for(int alice=0;alice<=1;alice++){
+                    int ans= alice? INT_MIN : INT_MAX;
+                    int total=0;
+                    for(int x=1;x<=2*m;x++){
+                        if(x+i-1>=piles.size()) continue;
+                        total+=piles[x+i-1];
+                        if(alice) ans=max(ans,total+dp[i+x][max(m,x)][0]);
+                        else    ans=min(ans,dp[i+x][max(m,x)][1]);
+                    }
+                    dp[i][m][alice]=ans ;
+                }
+            }
+        }
+        return dp[0][1][1];
+    }
+    int stoneGameII(vector<int>& piles) {
+        int n=piles.size();
+        return bottumup(piles,n);
+        /* vector<vector<vector<int>>> dp(n+1,vector<vector<int>>(n+1,vector<int>(2,-1)));
+        return memo(piles,0,1,1,dp); */
+        //return rec(piles,0,1,1);
+    }
+};
