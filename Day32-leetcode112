@@ -1,0 +1,15 @@
+https://leetcode.com/problems/path-sum/description/
+
+class Solution {
+public:
+    bool rec(TreeNode* root, int t){
+        if(!root ) return false;
+        if(t-root->val==0 && !root->left && !root->right) return true;
+        bool l=rec(root->left,t-root->val);
+        bool r=rec(root->right,t-root->val);
+        return (l || r);
+    }
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        return rec(root,targetSum);
+    }
+};
