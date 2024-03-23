@@ -1,0 +1,15 @@
+https://leetcode.com/problems/pascals-triangle-ii/description/
+
+class Solution {
+public:
+    vector<int> getRow(int r) {
+        vector<int> ans (1,1);
+        long long prev=1;
+        for(int i=1;i<=r;i++){
+            long long t=prev*(r-i+1)/i;
+            ans.push_back(t);
+            prev=t;
+        }
+        return ans;
+    }
+};
