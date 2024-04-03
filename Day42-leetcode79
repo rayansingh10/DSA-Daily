@@ -1,0 +1,27 @@
+https://leetcode.com/problems/word-search/description/
+
+
+class Solution {
+public:
+    map<pair<int,int>,bool> m;
+    bool rec(vector<vector<char>>& board, string &s,int i,int row,int col){
+        if(i==s.size()) return true;
+        if(row>=board.size() || row<0 || col>=board[0].size() || col<0 || m[{row,col}]) return false;
+        if(board[row][col]!=s[i]) return false;
+        m[{row,col}]=1;
+        bool ans=rec(board,s,i+1,row,col-1) ||rec(board,s,i+1,row+1,col)||
+                    rec(board,s,i+1,row,col+1)||rec(board,s,i+1,row-1,col);
+        m[{row,col}]=0;
+        return ans;
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        for(int row=0;row<board.size();row++){
+            for(int col=0;col<board[0].size();col++){
+                if(board[row][col]==word[0]){
+                    if(rec(board,word,0,row,col)) return true;
+                }          
+            }
+        }
+        return false;
+    }
+};
