@@ -1,0 +1,19 @@
+https://leetcode.com/problems/maximum-nesting-depth-of-the-parentheses/description/
+
+
+class Solution {
+public:
+    int maxDepth(string s) {
+        int maxi=0;
+        int ans=0;
+        int i=0;
+        while(i<s.size()){
+            if(s[i]=='('){
+                maxi=max(++ans,maxi);
+            }
+            else if(s[i]==')') ans--;
+            i++;
+        }
+        return maxi;
+    }
+};
