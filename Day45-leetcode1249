@@ -1,0 +1,25 @@
+https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/description/
+
+
+class Solution {
+public:
+    string minRemoveToMakeValid(string s) {
+        stack<int> st;
+        cout<<s.length();
+        for(int i=0;i<s.length();i++){
+            if(st.empty() && s[i]==')') s[i]='*';
+            else if(!st.empty() && s[i]==')') st.pop();
+            else if(s[i]=='(') st.push(i);
+        }
+        while(!st.empty()){
+            s[st.top()]='*';
+            st.pop();
+        }
+        string ans="";
+        for(int i=0;i<s.length();i++){ 
+            //yaha ans=ans+s[i] me memory limit exceed hoga 
+            if(s[i]!='*') ans.push_back(s[i]);
+        }
+        return ans;
+    }
+};
