@@ -1,0 +1,17 @@
+https://leetcode.com/problems/excel-sheet-column-title/description/
+
+class Solution {
+public:
+    string convertToTitle(int columnNumber) {
+        string ans="";
+        int n=columnNumber;
+        while(n>0){
+            n--;
+            int a=n%26;
+            n=n/26;
+            char c='A'+a;
+            ans=c+ans;
+        }
+        return ans;
+    }
+};
