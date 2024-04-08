@@ -1,0 +1,15 @@
+https://leetcode.com/problems/move-zeroes/description/
+
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        if(nums.size()<=1) return;
+        int i=0,j=1;
+        while(j<nums.size()){
+            if(nums[i]!=0) i++,j++;
+            else if(nums[i]==0 && nums[j]!=0) swap(nums[i++],nums[j++]);
+            else  j++;
+        }
+        return;
+    }
+};
