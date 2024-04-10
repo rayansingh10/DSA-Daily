@@ -1,0 +1,15 @@
+https://leetcode.com/problems/find-pivot-index/description/?envType=study-plan-v2&envId=leetcode-75
+
+class Solution {
+public:
+    int pivotIndex(vector<int>& nums) {
+        int left=0;
+        int total=0;
+        for(int i=0;i<nums.size();i++) total=total+nums[i];
+        for(int i=0;i<nums.size();i++){
+            if(left*2==total-nums[i]) return i;
+            left+=nums[i];
+        }
+        return -1;
+    }
+};
