@@ -1,0 +1,51 @@
+https://leetcode.com/problems/maximal-rectangle/description/
+
+class Solution {
+public:
+    vector<int> nextshort(vector<int>& h){
+        vector<int> ans(h.size());
+        stack<int> s;
+        s.push(-1);
+        for(int i=h.size()-1;i>=0;i--){
+            while(s.top()!=-1 && h[i]<=h[s.top()]) s.pop();
+            ans[i]=s.top();
+            s.push(i);
+        }
+        return ans;
+    }
+    vector<int> prevshort(vector<int>& h){
+        vector<int> ans(h.size());
+        stack<int> s;
+        s.push(-1);
+        for(int i=0;i<h.size();i++){
+            while(s.top()!=-1 && h[i]<=h[s.top()]) s.pop();
+            ans[i]=s.top();
+            s.push(i);
+        }
+        return ans;
+    }
+    int largestRectangleArea(vector<int>& h) {
+        int area=INT_MIN;
+        vector<int> next=nextshort(h);
+        vector<int> prev=prevshort(h);
+        for(int i=0;i<h.size();i++){
+            int l=h[i];
+            int b=next[i]-prev[i]-1;
+            if(next[i]==-1) b=h.size()-prev[i]-1;
+            area=max(area,l*b);
+        }
+        return area;
+    }
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        vector<int> height(matrix[0].size(),0);
+        int area=0;
+        for(int i=0;i<matrix.size();i++){
+            for(int j=0;j<height.size();j++){
+                if(matrix[i][j]=='1') height[j]++;
+                else height[j]=0;
+            }
+            area=max(area,largestRectangleArea(height));
+        }
+        return area;
+    }
+};
