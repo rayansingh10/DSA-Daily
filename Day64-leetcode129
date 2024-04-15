@@ -1,0 +1,21 @@
+https://leetcode.com/problems/sum-root-to-leaf-numbers/description/
+
+
+class Solution {
+public:
+    void rec(TreeNode* root,int &sum,int p){
+        p=p*10+root->val;
+        if(!root->left && !root->right){
+            sum+=p;
+            return;
+        }
+        if(root->left) rec(root->left,sum,p);
+        if(root->right) rec(root->right,sum,p);
+        return;
+    }
+    int sumNumbers(TreeNode* root) {
+        int sum=0;
+        rec(root,sum,0);
+        return sum;
+    }
+};
