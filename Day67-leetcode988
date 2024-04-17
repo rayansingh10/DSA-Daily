@@ -1,0 +1,21 @@
+https://leetcode.com/problems/smallest-string-starting-from-leaf/description/
+
+//string apne aap hi lexicographically order me compare karta hai '<' to function ki need nahi
+class Solution {
+public:
+    void rec(TreeNode* root,string curr,string &ans){
+        curr=char(root->val+'a')+curr;
+        if(!root->left && !root->right){
+            if(ans=="" || curr<ans) ans=curr;
+            return;
+        }
+        if(root->left) rec(root->left,curr,ans);
+        if(root->right) rec(root->right,curr,ans);
+        return;
+    }
+    string smallestFromLeaf(TreeNode* root) {
+        string ans="";
+        rec(root,"",ans);
+        return ans;
+    }
+};
