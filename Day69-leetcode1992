@@ -1,0 +1,22 @@
+https://leetcode.com/problems/find-all-groups-of-farmland/description/
+
+class Solution {
+public:
+    vector<vector<int>> findFarmland(vector<vector<int>>& land) {
+        vector<vector<int>> ans;
+        for(int i=0;i<land.size(); i++){
+            for(int j=0;j<land[0].size();j++){
+                if(land[i][j]==1){
+                    int r1=i,c1=j;
+                    while(r1<land.size() && land[r1][j]==1) r1++;
+                    while(c1<land[0].size() && land[i][c1]==1) c1++;
+                    ans.push_back({i,j,r1-1,c1-1});
+                    for(int row=i;row<r1;row++){
+                        for(int col=j;col<c1;col++) land[row][col]=0;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+};
