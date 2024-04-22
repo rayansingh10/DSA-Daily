@@ -1,0 +1,38 @@
+leetcode.com/problems/open-the-lock/
+
+//bfs soln
+
+class Solution {
+public:
+    string increment(string s, int i){
+        s[i]= s[i]=='9' ? '0' : s[i]+1;
+        return s;
+    }
+    string decrement(string s, int i){
+        s[i]= s[i]=='0' ? '9' : s[i]-1;
+        return s;
+    }
+    int openLock(vector<string>& deadends, string target) {
+        set<string> vis(deadends.begin(),deadends.end());
+        if(vis.count("0000")) return -1;
+        queue<pair<string,int>> q;
+        q.push({"0000",0});
+        vis.insert("0000");
+        while(!q.empty()){
+            string node=q.front().first;
+            int move=q.front().second;
+            q.pop();
+            if(node==target) return move;
+            for(int i=0;i<4;i++){
+                for(int j :{0,1}){
+                    string v = j==0 ? decrement(node,i) : increment(node,i);
+                    if(!vis.count(v)){
+                        q.push({v,move+1});
+                        vis.insert(v);
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+};
