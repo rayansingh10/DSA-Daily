@@ -1,0 +1,26 @@
+https://www.codechef.com/START131D/problems/DIDE
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	// your code goes here
+    int t;
+    cin>>t;
+    while(t--){
+        int n,k;
+        cin>>n>>k;
+        vector<int> dice(n,0);
+        for(int i=0;i<n;i++) cin>>dice[i];
+        sort(dice.begin(),dice.end());
+        int sum=0;
+        for(int i=0;i<n;i++) sum=sum+dice[i];
+        for(int i=0;i<k;i++){
+            int t=sum;
+            t=t-dice[i]+(7-dice[i]);
+            if(t<sum) break;
+            sum=t;
+        }
+        cout<<sum<<endl;
+    }
+}
