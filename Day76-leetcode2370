@@ -1,0 +1,35 @@
+https://leetcode.com/problems/longest-ideal-subsequence/description/
+
+
+//isme prev 1 to 26 nhi ja raha randomly kuch bhi ho skta hai like 25,then 3 then 2 so hum yaha pe bottum up loop
+//reverse nhi karenge normally 0-26 chalayenge
+class Solution {
+public:
+    int memo(string &s,int &k,int i,int prev,vector<vector<int>> dp){
+        if(i==s.size()) return 0;
+        if(dp[i][prev]!=-1) return dp[i][prev];
+        int include=0,exclude=0;
+        int curr=s[i]-'a'+1;
+        if(prev==0 || abs(curr-prev)<=k) include=1+memo(s,k,i+1,curr,dp);
+        exclude=memo(s,k,i+1,prev,dp);
+        return dp[i][prev]=max(include,exclude);
+    }
+    int bottumup(string &s,int &k){
+        vector<vector<int>> dp(s.length()+1,vector<int>(27,0));
+        for(int i=s.size()-1;i>=0;i--){
+            for(int prev=0;prev<27;prev++){
+                int include=0,exclude=0;
+                int curr=s[i]-'a'+1;
+                if(prev==0 || abs(curr-prev)<=k) include=1+dp[i+1][curr];
+                exclude=dp[i+1][prev];
+                dp[i][prev]=max(include,exclude);
+            }
+        }
+        return dp[0][0];
+    }
+    int longestIdealString(string s, int k) {
+        /* vector<vector<int>> dp(s.length()+1,vector<int>(27,-1));
+        return memo(s,k,0,0,dp); */
+        return bottumup(s,k);
+    } 
+};
