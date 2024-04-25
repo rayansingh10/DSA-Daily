@@ -1,0 +1,37 @@
+https://leetcode.com/problems/course-schedule/description/
+
+
+//cycle detection using bfs
+
+class Solution {
+public:
+    bool canFinish(int n, vector<vector<int>>& pre) {
+        if(pre.size() <=1 ) return true;
+        vector<vector<int>> adj(n,vector<int>());
+        vector<int> deg(n,0);
+        for(int i=0;i<pre.size();i++){
+            adj[pre[i][1]].push_back(pre[i][0]);
+            deg[pre[i][0]]++;
+        }
+        queue<int> q;
+        int e=0;
+        for(int i=0;i<n;i++){
+            if(deg[i]==0) {
+                q.push(i);
+                e++;
+            }
+        }
+        while(!q.empty()){
+            int front=q.front();
+            q.pop();
+            for(auto k:adj[front]){
+                deg[k]--;
+                if(deg[k]==0){
+                    q.push(k);
+                    e++;
+                }
+            }
+        }
+        return n==e? true : false;
+    }
+};
