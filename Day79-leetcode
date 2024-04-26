@@ -1,0 +1,47 @@
+https://leetcode.com/problems/minimum-falling-path-sum-ii/description/
+
+//mmeo se ho jayega but fir aage ka bana deta hu 
+class Solution {
+public:
+    int rec(vector<vector<int>>& grid,int row,int prevcol){
+        if(row==grid.size()) return 0;
+        int mini=INT_MAX;
+        for(int i=0;i<grid[row].size();i++){
+            if(i==prevcol) continue;
+            mini=min(mini,grid[row][i]+rec(grid,row+1,i));
+        }
+        return mini;
+    }
+    int memo(vector<vector<int>>& grid,int row,int prevcol,vector<vector<int>> &dp){
+        if(row==grid.size()) return 0;
+        //prev=-1 ko dp[][0] se represent kar dete hai
+        if(dp[row][prevcol+1]!=-1) return dp[row][prevcol+1];
+        int mini=INT_MAX;
+        for(int i=0;i<grid[row].size();i++){
+            if(i==prevcol) continue;
+            mini=min(mini,grid[row][i]+memo(grid,row+1,i,dp));
+        }
+        return dp[row][prevcol+1]=mini;
+    }
+    int bu(vector<vector<int>>& grid){
+        int n=grid.size();
+        vector<vector<int>> dp(n+1,vector<int>(n+2,0));
+        for(int row=n-1;row>=0;row--){
+            for(int prevcol=n-1;prevcol>=-1;prevcol--){
+                int mini=INT_MAX;
+                for(int i=0;i<grid[row].size();i++){
+                    if(i==prevcol) continue;
+                    mini=min(mini,grid[row][i]+dp[row+1][i+1]);
+                }
+                dp[row][prevcol+1]=mini;
+            }
+        }
+        return dp[0][0];
+    }
+    int minFallingPathSum(vector<vector<int>>& grid) {
+        return bu(grid);
+        /* vector<vector<int>> dp(grid.size()+1,vector<int>(grid.size()+2,-1));
+        return memo(grid,0,-1,dp); */
+        //return rec(grid,0,-1);
+    }
+};
