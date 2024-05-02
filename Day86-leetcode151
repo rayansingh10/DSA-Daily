@@ -1,0 +1,22 @@
+https://leetcode.com/problems/reverse-words-in-a-string/submissions/1247504315/
+
+
+class Solution {
+public:
+    string reverseWords(string s) {
+        string word="";
+        string ans="";
+        for(char i: s){
+            if(i!=' '){
+                word=word+i;
+            }
+            else if(i==' ' && word!=""){
+                ans=' '+word+ans;
+                word="";
+            }
+        }
+        if(word!="") ans=' '+word+ans;
+        ans.erase(0,1);
+        return ans;
+    }
+};
