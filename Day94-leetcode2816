@@ -1,0 +1,39 @@
+https://leetcode.com/problems/double-a-number-represented-as-a-linked-list/description/?envType=daily-question&envId=2024-05-07
+
+//1st approach
+class Solution {
+public:
+    ListNode* doubleIt(ListNode* head) {
+    if (head->val > 4)
+        head = new ListNode(0, head);
+    for(ListNode* node = head; node; node = node->next) {
+        node->val = (node->val * 2) % 10;
+        if (node->next && node->next->val > 4) node->val++;
+    }
+    return head;
+    }
+};
+---------------------------------------------------------------------------------------------------
+//2nd approach
+class Solution {
+public:
+    int rec(ListNode* root){
+        if(!root) return 0;
+        int t=rec(root->next);
+        int n=root->val;
+        n=n+n+t;
+        root->val=n%10;
+        return n/10;
+
+    }
+    ListNode* doubleIt(ListNode* head) {
+       if(head->val==0) return head;
+       int val=rec(head);
+       if(val!=0){
+        ListNode * temp=new ListNode(val);
+        temp->next=head;
+        head=temp;
+       }
+       return head; 
+    }
+};
