@@ -1,0 +1,27 @@
+https://leetcode.com/problems/relative-ranks/description/?envType=daily-question&envId=2024-05-08
+
+
+class Solution {
+public:
+    vector<string> findRelativeRanks(vector<int>& score) {
+        priority_queue<pair<int,int>> p;
+        vector<string> ans(score.size(),"");
+        for(int i=0;i<score.size();i++){
+            p.push({score[i],i});
+        }
+        int n=1;
+        while(!p.empty()){
+            auto temp=p.top();
+            p.pop();
+            int index=temp.second;
+            if(n==1) ans[index]="Gold Medal";
+            else if(n==2) ans[index]="Silver Medal";
+            else if(n==3) ans[index]="Bronze Medal";
+            else{
+                ans[index]=to_string(n);
+            }
+            n++;
+        }
+        return ans;
+    }
+};
