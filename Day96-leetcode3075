@@ -8,8 +8,7 @@ public:
         int i=hap.size()-k;
         while(k--){
             hap[i]=hap[i]-k;
-            ans= ans+ (hap[i]<0 ? 0:hap[i]);
-            i++;
+            ans= ans+ max(hap[i++],0);
         }
         return ans;
     }
