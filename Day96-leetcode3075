@@ -6,6 +6,21 @@ public:
         long long ans=0;
         sort(hap.begin(),hap.end());
         int i=hap.size()-k;
+        while(k--){
+            hap[i]=hap[i]-k;
+            ans= ans+ (hap[i]<0 ? 0:hap[i]);
+            i++;
+        }
+        return ans;
+    }
+};
+------------------------------------------------------------------------------------------------------------------------------------------------------
+class Solution {
+public:
+    long long maximumHappinessSum(vector<int>& hap, int k) {
+        long long ans=0;
+        sort(hap.begin(),hap.end());
+        int i=hap.size()-k;
         for( ;i<hap.size()-1;i++){
             hap[i]=hap[i]-k+1;
             ans= ans+ (hap[i]<0 ? 0:hap[i]);
