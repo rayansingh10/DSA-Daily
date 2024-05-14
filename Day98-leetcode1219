@@ -1,0 +1,24 @@
+https://leetcode.com/problems/path-with-maximum-gold/
+
+
+class Solution {
+public:
+    int rec(vector<vector<int>>& grid,int i,int j){
+        if(i>=grid.size() || i <0) return 0;
+        if(j>=grid[0].size() || j<0) return 0;
+        if(grid[i][j]<=0) return 0;
+        grid[i][j]= -grid[i][j];
+        int ans=max(rec(grid,i+1,j),max(rec(grid,i,j+1),max(rec(grid,i-1,j),rec(grid,i,j-1))));
+        grid[i][j]=-grid[i][j];
+        return grid[i][j]+ans;
+    }
+    int getMaximumGold(vector<vector<int>>& grid) {
+        int maxi=0;
+        for(int i=0;i<grid.size();i++){
+            for(int j=0;j<grid[0].size();j++){
+                maxi=max(maxi,rec(grid,i,j));
+            }
+        }
+        return maxi;
+    }
+};
