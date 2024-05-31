@@ -1,0 +1,16 @@
+https://leetcode.com/problems/single-number-iii/description/
+
+
+class Solution {
+public:
+    vector<int> singleNumber(vector<int>& nums) {
+        int xans=0,first=0,mask=1;
+        for(auto i: nums) xans=xans^i;
+        while( !(xans & mask)) mask <<= 1;
+        for(auto i:nums){
+            if(i & mask) first^=i;
+        }
+        return{first,xans^first};
+
+    }
+};
