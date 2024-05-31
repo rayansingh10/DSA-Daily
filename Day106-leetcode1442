@@ -4,13 +4,14 @@ https://leetcode.com/problems/count-triplets-that-can-form-two-arrays-of-equal-x
 class Solution {
 public:
     int countTriplets(vector<int>& A) {
-        A.insert(A.begin(), 0);
-        int n = A.size(), res = 0;
-        for (int i = 1; i < n; ++i)
-            A[i] ^= A[i - 1];
+        int n=A.size();
+        int res=0;
+        vector<int> prefix(n+1,0);
+        for (int i = 1; i <=n; ++i)
+            prefix[i] = prefix[i-1]^A[i-1];
         for (int i = 0; i < n; ++i)
-            for (int j = i + 1; j < n; ++j)
-                if (A[i] == A[j])
+            for (int j = i + 1; j <= n; ++j)
+                if (prefix[i] == prefix[j])
                     res += j - i - 1;
         return res;
     }
