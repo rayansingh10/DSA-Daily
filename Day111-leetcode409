@@ -1,0 +1,37 @@
+https://leetcode.com/problems/longest-palindrome/
+
+//2 approach
+
+class Solution {
+public:
+    int longestPalindrome(string s) {
+        unordered_map<char,int> freq;
+        int count =0;
+        for(int i=0;i<s.size();i++){
+            if(freq.find(s[i])!=freq.end()){
+                freq.erase(s[i]);
+                count++;
+            }
+            else freq[s[i]]=1;
+        }
+        if(freq.size()!=0) return 2*count+1;
+        return 2*count;
+    }
+};
+----------------------------------------------------------------------------------------------
+class Solution {
+public:
+    int longestPalindrome(string s) {
+        unordered_map<char,int> freq;
+        for(int i=0;i<s.size();i++){
+            if(freq.find(s[i])!=freq.end()) freq[s[i]]++;
+            else freq[s[i]]=1;
+        }
+        int odd=0;
+        for(auto i : freq){
+            if(i.second%2!=0) odd++;
+        }
+        if(odd!=0) return s.length()-odd+1;
+        return s.length();
+    }
+};
