@@ -1,0 +1,21 @@
+https://leetcode.com/problems/find-common-characters/description/
+
+
+class Solution {
+public:
+    vector<string> commonChars(vector<string>& words) {
+        vector<string> ans;
+        for( char i : words[0]){
+            bool com=true;
+            for(int j=1;j<words.size();j++){
+                if(words[j].find(i)==string::npos){
+                    com=false;
+                    break;
+                }
+                words[j].erase(words[j].find(i),1);
+            }
+            if(com) ans.push_back(string(1,i));
+        }
+        return ans;
+    }
+};
