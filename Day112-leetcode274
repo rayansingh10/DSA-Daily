@@ -1,0 +1,16 @@
+https://leetcode.com/problems/h-index/description/
+
+class Solution {
+public:
+    int hIndex(vector<int>& cit) {
+        int count=0,h=cit.size();
+        sort(cit.rbegin(),cit.rend());
+        cit.push_back(0);
+        for(int i=0;i<cit.size();i++){
+            if(cit[i]<i+1){
+                return i;
+            }
+        }
+        return 1;
+    }
+};
