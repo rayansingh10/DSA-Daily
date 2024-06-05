@@ -1,0 +1,18 @@
+https://leetcode.com/problems/get-equal-substrings-within-budget/
+
+//sliding window concept
+class Solution {
+public:
+    int equalSubstring(string s, string t, int maxCost) {
+        int start=0,maxl=0,cur=0;
+        for(int end=0;end<s.length();end++){
+            cur+=abs(s[end]-t[end]);
+            while(cur>maxCost){
+                cur-=abs(s[start]-t[start]);
+                start++;
+            }
+            maxl=max(maxl,end-start+1);
+        }
+        return maxl;
+    }
+};
