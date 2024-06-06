@@ -1,0 +1,14 @@
+https://leetcode.com/problems/special-array-with-x-elements-greater-than-or-equal-x/description/
+
+class Solution {
+public:
+    int specialArray(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        int n=nums.size();
+        for(int i=n;i>=1;i--){
+            int j=n-i;
+            if(nums[j]>=i && ( j==0 || nums[j-1]<i ) ) return i;
+        }
+        return -1;
+    }
+};
