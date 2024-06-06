@@ -1,0 +1,26 @@
+https://leetcode.com/problems/hand-of-straights/
+
+//greedy approach since need is consecutive and hence we can't leave a element+1 
+class Solution {
+public:
+    bool isNStraightHand(vector<int>& hand, int gs) {
+        sort(hand.begin(),hand.end());
+        for(int i=0;i<hand.size();i++){
+            if(hand[i]==-1) continue;
+            int j=i+1;
+            int num=hand[i]+1;
+            hand[i]=-1;
+            int curr=1;
+            while(j<hand.size() && curr<gs){
+                if(hand[j]==num){
+                    curr++;
+                    num++;
+                    hand[j]=-1;
+                }
+                j++;
+            }
+            if(j>=hand.size() && curr<gs ) return false;
+        }
+        return true;
+    }
+};
