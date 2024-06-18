@@ -1,0 +1,26 @@
+https://leetcode.com/problems/flood-fill/description/
+
+class Solution {
+public:
+    void dfs(vector<vector<int>> &ans,int row,int col,int &color,int &old){
+        ans[row][col]=color;
+        int dx[]={-1,1,0,0};
+        int dy[]={0,0,-1,1};
+        for(int i=0;i<4;i++){
+            int nr=row+dx[i];
+            int nc=col+dy[i];
+            cout<<ans.size()<<" "<<ans[0].size()<<endl;
+            cout<<nr<<" "<<nc<<endl;
+            if(nr>=0 && nr<ans.size() && nc>=0 && nc<ans[0].size() && ans[nr][nc]==old){
+                cout<<" going in" << nr<<" "<<nc<<endl;
+                dfs(ans,nr,nc,color,old);
+            }
+        }
+    }
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        vector<vector<int>> ans=image;
+        if(color==ans[sr][sc]) return ans;
+        dfs(ans,sr,sc,color,image[sr][sc]);
+        return ans;
+    }
+};
