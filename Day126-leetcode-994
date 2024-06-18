@@ -1,0 +1,84 @@
+https://leetcode.com/problems/rotting-oranges/description/
+
+//2-approach given below
+
+//using time variable  as limit  
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        int time=0;
+        queue<pair<pair<int,int>,int>> q;
+        int fres=0;
+        for(int i=0;i<grid.size();i++){
+            for(int j=0;j<grid[0].size();j++){
+                if(grid[i][j]==2) q.push({{i,j},0});
+                if(grid[i][j]==1) fres++;
+            }
+        }
+        while(!q.empty()){
+            int x=q.front().first.first;
+            int y=q.front().first.second;
+            int t=q.front().second;
+            q.pop();
+            int dx[]={-1,1,0,0};
+            int dy[]={0,0,-1,1};
+            for(int i=0;i<4;i++){
+                int nr=x+dx[i];
+                int nc=y+dy[i];
+                if(nr>=0 && nr<grid.size() && nc>=0 && nc<grid[0].size() && grid[nr][nc]==1){
+                    grid[nr][nc]=2;
+                    fres--;
+                    time=t+1;
+                    q.push({{nr,nc},t+1});
+                }
+            }
+        }
+        return fres>0 ? -1 : time;
+    }
+};
+-------------------------------------------------------------------------------------------------------------------------------------------------
+////without time in queue or using {-1,-1} as limit
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        int time=0;
+        queue<pair<int,int>> q;
+        int fres=0;
+        for(int i=0;i<grid.size();i++){
+            for(int j=0;j<grid[0].size();j++){
+                if(grid[i][j]==2) q.push({i,j});
+                if(grid[i][j]==1) fres++;
+            }
+        }
+        q.push({-1,-1});
+        int flag=0;
+        while(!q.empty()){
+            int x=q.front().first;
+            int y=q.front().second;
+            q.pop();
+            if(x==-1 && y==-1){
+                if(flag) {
+                    time++;
+                    flag=0;
+                    q.push({-1,-1});
+                    cout<<"pushed"<<endl;
+                }
+                continue;
+            }
+            int dx[]={-1,1,0,0};
+            int dy[]={0,0,-1,1};
+            for(int i=0;i<4;i++){
+                int nr=x+dx[i];
+                int nc=y+dy[i];
+                if(nr>=0 && nr<grid.size() && nc>=0 && nc<grid[0].size() && grid[nr][nc]==1){
+                    grid[nr][nc]=2;
+                    fres--;
+                    cout<<"going in "<<nr<<" "<<nc<<endl;
+                    flag=1;
+                    q.push({nr,nc});
+                }
+            }
+        }
+        return fres>0 ? -1 : time;
+    }
+};
