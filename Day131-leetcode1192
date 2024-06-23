@@ -1,0 +1,46 @@
+https://leetcode.com/problems/critical-connections-in-a-network/
+
+class Solution {
+public:
+    void dfs(int src,unordered_map<int,vector<int>> &adj,vector<bool> &vis,int &timer,
+    vector<vector<int>> &ans,vector<int> &tin,vector<int> &low,int parent){
+        vis[src]=1;
+        tin[src]=timer;
+        low[src]=timer;
+        timer++;
+        for(auto i : adj[src]){
+            // continue bhool gya
+            if(i ==parent) continue;
+            if(!vis[i]){
+                dfs(i,adj,vis,timer,ans,tin,low,src);
+                //update karna bhool gya 
+                low[src]=min(low[src],low[i]);
+                if(tin[src]<low[i]) ans.push_back({src,i});
+            }
+            //yaha pe tin or low wala check nhi karna hai yaha bhi glti ki thi
+            else{
+                low[src]=min(low[src],low[i]);
+            }
+        }
+        
+    }
+    vector<vector<int>> criticalConnections(int V, vector<vector<int>>& con){
+        vector<int> tin(V);
+        vector<int> low(V);
+        vector<bool> vis(V);
+        unordered_map<int,vector<int>> adj;
+        for(auto i : con){
+            adj[i[0]].push_back(i[1]);
+            adj[i[1]].push_back(i[0]);
+        }
+        vector<vector<int>> ans;
+        int timer=1;
+        for(int i=0;i<V;i++){
+            if(!vis[i]) dfs(i,adj,vis,timer,ans,tin,low,-1);
+        }
+        for(auto i : ans){
+            cout<<i[0]<<"->"<<i[1]<<endl;
+        }
+        return ans;
+    }
+};
