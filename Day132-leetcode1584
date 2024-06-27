@@ -1,0 +1,26 @@
+https://leetcode.com/problems/min-cost-to-connect-all-points/description/
+
+class Solution {
+public:
+    int minCostConnectPoints(vector<vector<int>>& ps) {
+        priority_queue<pair<int,int>> q;
+        int V=ps.size();
+        vector<bool> vis(V,false);
+        int conn=0;
+        int res=0;
+        q.push({0,0});
+        while(++conn<V){
+            auto node=q.top();
+            int i=node.second;
+            vis[i]=true;
+            for(int j=0;j<V;j++){
+                if(!vis[j]){
+                    q.push({-(abs(ps[i][0]-ps[j][0])+abs(ps[i][1]-ps[j][1])),j});
+                }
+            }
+            while(vis[q.top().second]) q.pop();
+            res-=q.top().first;
+        }
+        return res;
+    }
+};
