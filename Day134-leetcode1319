@@ -1,0 +1,44 @@
+https://leetcode.com/problems/number-of-operations-to-make-network-connected/description/
+
+class Solution {
+public:
+    //in this union i am already providing parents so slight modified union operation
+    void unionbysize(int u,int v,vector<int> &size,vector<int> &parent){
+        if(size[u]<size[v]){
+            parent[u]=v;
+            size[v]+=size[u];
+        }
+        else{
+            parent[v]=u;
+            size[u]+=size[v];
+        }
+        return;
+    }
+    int findparent(int node,vector<int> &parent){
+        if(parent[node]==node) return node;
+        return parent[node]=findparent(parent[node],parent);
+    }
+    int makeConnected(int n, vector<vector<int>>& connections) {
+        vector<int> parent(n);
+        vector<int> size(n,1);
+        for(int i=0;i<n;i++) parent[i]=i;
+        int extraedge=0;
+        for(auto edge : connections){
+            int u=edge[0];
+            int v=edge[1];
+            u=findparent(u,parent);
+            v=findparent(v,parent);
+            if(u!=v){
+                //union by rank is also good
+                unionbysize(u,v,size,parent);
+            }
+            else extraedge++;
+        }
+        int connectedcomp=0;
+        for(int i=0;i<n;i++){
+            if(parent[i]==i) connectedcomp++;
+        }
+        int ans=connectedcomp-1;
+        return  ans<=extraedge ? ans : -1;
+    }
+};
