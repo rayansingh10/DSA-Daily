@@ -1,0 +1,51 @@
+https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/description/
+
+
+class Solution {
+public:
+    int djikstra(int &src,int &n,unordered_map<int,vector<pair<int,int>>> &adjlist,int &thres){
+        set<pair<int,int>> s;
+        vector<int> dist(n,INT_MAX);
+        int cities=0;
+        dist[src]=0;
+        s.insert({0,src});
+        while(!s.empty()){
+            auto node= *s.begin();
+            s.erase(s.begin());
+            int u=node.second;
+            int w=node.first;
+            if(u!=src && w<=thres) cities++;
+            for(auto neigh : adjlist[u]){
+                int v=neigh.first;
+                int len=neigh.second;
+                if(w+len <dist[v]){
+                    if(s.find({dist[v],v})!=s.end()) s.erase(s.find({dist[v],v}));
+                    dist[v]=w+len;
+                    s.insert({dist[v],v});
+                }
+            }
+        }
+        return cities;
+    }
+    int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
+        unordered_map<int,vector<pair<int,int>>> adjlist;
+        for(auto edge :edges){
+            int u=edge[0];
+            int v=edge[1];
+            int w=edge[2];
+            adjlist[u].push_back({v,w});
+            adjlist[v].push_back({u,w});
+        }
+        int city=0;
+        int mincities=INT_MAX;
+        //har ek node ki distance ek dusre se nikalo 
+        for(int u=0;u<n;u++){
+            int cities=djikstra(u,n,adjlist,distanceThreshold);
+            if(cities<=mincities){
+                mincities=cities;
+                city=u;
+            }
+        }
+        return city;
+    }
+};
