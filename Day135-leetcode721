@@ -1,0 +1,59 @@
+https://leetcode.com/problems/accounts-merge/description/
+
+class Solution {
+public:
+    void unionset(int u,int v,vector<int> &rank,vector<int> &parent){
+        u=findparent(u,parent);
+        v=findparent(v,parent);
+        if(rank[u]<rank[v]){
+            parent[u]=v;
+            rank[v]++;
+        }
+        else{
+            parent[v]=u;
+            rank[u]++;
+        }
+        return;
+    }
+    int findparent(int node,vector<int> &parent){
+        if(parent[node]==node) return node;
+        return parent[node]=findparent(parent[node],parent);
+    }
+    vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
+        int n=accounts.size();
+        vector<int> rank(n,0);
+        vector<int> parent(n);
+        for(int i=0;i<n;i++) parent[i]=i;
+        unordered_map<string,int> map;
+        for(int i=0;i<n;i++){
+            for(int j=1;j<accounts[i].size();j++){
+                auto mail=accounts[i][j];
+                if(map.find(mail)!=map.end()){
+                    //mail ka  previous parent or current parent ka union 
+                    unionset(map[mail],i,rank,parent);
+                }
+                else{
+                    map[mail]=i;
+                }
+            }
+        }
+        //set isliye taki sorted order mile
+        unordered_map<int,set<string>> pre_ans;
+        for(auto account : map){
+            int index=account.second;
+            string mail=account.first;
+            index=findparent(index,parent);
+            //asli parent me insert kardo 
+            pre_ans[index].insert(mail);
+        }
+        vector<vector<string>> ans;
+        for(auto it : pre_ans){
+            vector<string> temp;
+            string name=accounts[it.first][0];
+            temp.push_back(name);
+            for(auto mails : it.second) temp.push_back(mails);
+            ans.push_back(temp);
+        }
+        return ans;
+    }
+};
