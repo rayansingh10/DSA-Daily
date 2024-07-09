@@ -1,0 +1,23 @@
+https://leetcode.com/problems/average-waiting-time/description/
+
+class Solution {
+public:
+    double averageWaitingTime(vector<vector<int>>& customers) {
+        double waiting=0;
+        int current=0;
+        for(auto ele : customers){
+            int arrival=ele[0];
+            int prep=ele[1];
+            if(arrival<current){
+                current+=prep;
+                waiting=waiting + (current-arrival);
+            }
+            else{
+                current=arrival+prep;
+                waiting+=prep;
+            }
+        }
+        int n=customers.size();
+        return waiting/n;
+    }
+};
