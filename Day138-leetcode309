@@ -1,0 +1,68 @@
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/description/
+
+
+class Solution {
+public:
+    //all other approach given below maxprofit function
+    int spaceopt(vector<int> &s){
+        vector<int> curr(2,0);
+        vector<int> next1(2,0);
+        vector<int> next2(2,0);
+        for(int index=s.size()-1;index>=0;index--){
+            for(int buy=1;buy>=0;buy--){
+                int trade=0,notrade=0;
+                if(buy==0){
+                    notrade=next1[0];
+                    trade=next1[1]-s[index];
+                }
+                else{
+                    notrade=next1[1];
+                    trade=s[index]+next2[0];
+                }
+                curr[buy]=max(trade,notrade);
+            }
+            next2=next1;
+            next1=curr;
+        }
+        return curr[0];
+    }
+    int maxProfit(vector<int>& prices) {
+        return spaceopt(prices);
+        //return tab(prices);
+        /* vector<vector<int>> dp(2,vector<int>(prices.size()+1,-1));
+        return memo(prices,0,0,dp); */
+        //return maxp(prices,buy,0);
+    }
+    int memo(vector<int>& s,int buy,int index,vector<vector<int>>& dp){
+        if(index>=s.size()) return 0;
+        if(dp[buy][index]!=-1) return dp[buy][index];
+        int trade=0,notrade=0;
+        if(buy==0){
+            notrade=memo(s,0,index+1,dp);
+            trade=memo(s,1,index+1,dp)-s[index];
+        }
+        else{
+            notrade=memo(s,1,index+1,dp);
+            trade=s[index]+memo(s,0,index+2,dp);
+        }
+        return dp[buy][index]=max(trade,notrade);
+    }
+    int tab(vector<int> &s){
+        vector<vector<int>> dp(s.size()+2,vector<int>(2,0));
+        for(int index=s.size()-1;index>=0;index--){
+            for(int buy=1;buy>=0;buy--){
+                int trade=0,notrade=0;
+                if(buy==0){
+                    notrade=dp[index+1][0];
+                    trade=dp[index+1][1]-s[index];
+                }
+                else{
+                    notrade=dp[index+1][1];
+                    trade=s[index]+dp[index+2][0];
+                }
+                dp[index][buy]=max(trade,notrade);
+            }
+        }
+        return dp[0][0];
+    }
+};
