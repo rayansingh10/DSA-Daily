@@ -1,10 +1,23 @@
 https://leetcode.com/problems/is-graph-bipartite/description/
 
-//bfs approach
+
+//dfs and bfs approach
 
 class Solution {
 public:
-    bool bfs(int src,vector<int> &vis,vector<int> &set,vector<vector<int>>& adj){
+    bool dfs(int src,vector<int> &vis,vector<int> &set,vector<vector<int>>& adj,int grp){
+        vis[src]=1;
+        set[src]=grp;
+        grp=abs(grp-1);
+        for(auto ngbr : adj[src]){
+            if(vis[ngbr]==0 && !dfs(ngbr,vis,set,adj,grp)){
+                return false;
+            }
+            else if (vis[ngbr]==1 && set[ngbr]==set[src]) return false;
+        }
+        return true;       
+    }
+    /* bool bfs(int src,vector<int> &vis,vector<int> &set,vector<vector<int>>& adj){
         //1st node ,2nd set a or b
         queue<int> q;
         q.push(src);
@@ -24,13 +37,17 @@ public:
             }
         } 
         return true;       
-    }
+    } */    
     bool isBipartite(vector<vector<int>>& graph) {
         int V=graph.size();
         vector<int> vis(V,0);
         vector<int> set(V,-1);
-        for(int i=0;i<V;i++){
+        //for bfs 
+        /*for(int i=0;i<V;i++){
             if(vis[i]==0 && !bfs(i,vis,set,graph)) return false;
+        }*/
+        for(int i=0;i<V;i++){
+            if(vis[i]==0 && !dfs(i,vis,set,graph,0)) return false;
         }
         return true;
     }
