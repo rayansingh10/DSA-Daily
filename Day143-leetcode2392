@@ -1,0 +1,57 @@
+https://leetcode.com/problems/build-a-matrix-with-conditions/
+
+class Solution {
+public:
+    bool cycle(int k,vector<vector<int>> &adj){
+        //0-> not visited.  1-> visited and in current path 2-> visited but not in curpath
+        vector<int> vis(k,0);
+        for(int i=0;i<k;i++){
+            if(vis[i]==0 && dfs(i,adj,vis)) return true;
+        }
+        return false;
+    }
+    bool dfs(int src,vector<vector<int>> &adj,vector<int> &vis){
+        vis[src]=1;
+        for(auto ngbr: adj[src]){
+            if(vis[ngbr]==0 && dfs(ngbr,adj,vis)) return true;
+            else if(vis[ngbr]==1) return true;
+        }
+        vis[src]=2;
+        return false;
+    }
+    void dfs2(int src,vector<vector<int>> &adj,vector<int> &ans,vector<int> &vis){
+        vis[src]=1;
+        for(auto ngbr: adj[src]){
+            if(vis[ngbr]==0) dfs2(ngbr,adj,ans,vis);
+        }
+        ans.push_back(src);
+        return;
+    }
+    void toposort(int k,vector<vector<int>> &adj,vector<int> &ans){
+        vector<int> vis(k,0);
+        for(int i=0;i<k;i++){
+            if(vis[i]==0) dfs2(i,adj,ans,vis);
+        }
+        reverse(ans.begin(),ans.end());
+    }
+    vector<vector<int>> buildMatrix(int k, vector<vector<int>>& rowConditions, 
+    vector<vector<int>>& colConditions) {
+        vector<vector<int>> rowadj(k,vector<int>());
+        vector<vector<int>> coladj(k,vector<int>());
+        for(auto edges : rowConditions) rowadj[edges[0]-1].push_back(edges[1]-1);
+        for(auto edges : colConditions) coladj[edges[0]-1].push_back(edges[1]-1);
+        if(cycle(k,rowadj) || cycle(k,coladj) ) return {};
+        vector<int> rowpos,colpos;
+        toposort(k,rowadj,rowpos);
+        toposort(k,coladj,colpos);
+        vector<int> kthcol(k);
+        for(int i=0;i<k;i++){
+            kthcol[colpos[i]]=i;
+        }
+        vector<vector<int>> matrix(k,vector<int>(k,0));
+        for(int i=0;i<k;i++){
+            matrix[i][kthcol[rowpos[i]]]=rowpos[i]+1;
+        }
+        return matrix;
+    }
+};
