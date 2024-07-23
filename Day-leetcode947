@@ -1,0 +1,33 @@
+https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/
+
+//can be solved dfs or union with if else condition approach also;
+//optimal new approch
+// rows cols ko relate karlo sbko ek index manlo ;
+//cols ko 10^4 + col se assign kardo or uska parent jo row ka parent ho 
+class Solution {
+public:
+    unordered_map<int,int> m;
+    int islands=0;
+    void uni(int x,int y){
+        x=find(x);
+        y=find(y);
+        if(x!=y){
+            m[x]=y;
+            islands--;
+        }
+    }
+    int find(int ele){
+        if(!m.count(ele)) {
+            m[ele]=ele;
+            islands++;
+        }
+        if(m[ele]!=ele) m[ele]=find(m[ele]);
+        return m[ele];
+    }
+    int removeStones(vector<vector<int>>& stones) {
+        for(int i=0;i<stones.size();i++){
+            uni(stones[i][0],stones[i][1]+10001);
+        }
+        return stones.size()-islands;
+    }
+};
